@@ -16,7 +16,7 @@ typedef struct stk{
 	int maxlis;
 	int maxp;
 	int pos;
-	int *s;
+	int *s; // db fach kancomenti had line li zadt kaykhdam mz1 ila rj3to kaysegfaulti 
 }   t_stk;
 
 #endif
