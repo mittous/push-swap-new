@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// dont forgot to protect malloc
+
 typedef struct stk{
 	int	*a;
 	int *lis;
@@ -16,7 +18,7 @@ typedef struct stk{
 	int maxlis;
 	int maxp;
 	int pos;
-	int *s; // db fach kancomenti had line li zadt kaykhdam mz1 ila rj3to kaysegfaulti 
+	int *lis_a;
 }   t_stk;
 
 #endif

@@ -1,0 +1,54 @@
++serching for the best nb to push in[s.b] to [s.a]
+
+how?
+
++by creating *array of size of 4,
+and put in evry one of theme the totale of 
+instruction need to both of nb be in the top 
+of the stacks(a & b).
+
++how? : 
+
+if (both nb are > (size of stack/2))
+{
+    if[1](sos - indx_sa) - [2](sos - indx_sb) = rslt > 0 <=> (rrr * [2]) + (rra * rslt)
+    
+    else if [1](sos - indx_sa) - [2](sos - indx_sb) = rslt < 0 <=> (rrr * [1]) + (rrb * rslt)
+
+    +in arr[0]: we gone put into it how mush it need
+    with (rrr + rra/rrb)
+    // 
+}
+}
+
+else if (both nb are < (size of stack/2))
+{
+    [1](indx_sa) - [2](indx_sb) = rslt > 0 <=> (rr * [2]) + (ra * rslt)
+    [1](indx_sa) - [2](indx_sb) = rslt < 0 <=> (rrr * [1]) + (rb * rslt)
+
+    +in arr[1]: we gone put into it how mush it need
+    with (rr + ra/rb)
+}
+
+else if (nb[s.a] > (sos/2) && nb[s.b] < (sos/2))
+{
+
+
+    +in arr[2]: we gone put into it how mush it need
+    with (rra & rb)
+}
+
+else if (nb[s.a] < (sos/2) && nb[s.b] > (sos/2))
+{
+    +in arr[3]: we gone put into it how mush it need
+    with (ra & rrb)
+}
+
++but how can we know how mush of??
+
+++++=++++=++++=++++=++++=++++=++++=++++=++++=++++=++++=++++=++++=++++=++++
+
+// error in the lis;
+// seg whene the code is finish
+// she give the best move but not how it supose to be
+ 

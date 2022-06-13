@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-
 #include "push_swap.h"
 
 
@@ -43,7 +42,7 @@ int	ft_atoi(const char *str)
 		base = (base * 10) + (str[i] - 48);
 		i++;
 	}
-	ft_isalpha(str[i]);
+	ft_isalpha(str[i]);       
 	return (base * sign);
 }
 
@@ -236,6 +235,7 @@ void	ft_pb(t_stk *stk)
 	{
 		stk->b[j + 1] = stk->b[j];
 		j--;
+	//printf ("ha7na\n");
 	}
 	stk->b[0] = stk->a[0];
 	j = 0;
@@ -287,21 +287,43 @@ void	ft_utils(t_stk	*stk)
 			stk->pos = i;
 		}
 	e = -1;
-	//stk->c = 'N';
-	printf ("\nmax = %d", stk->maxlis);
-	stk->maxlis = stk->lis[stk->pos] + 1; // drna lih haka bach nstoki fih akbar value kayna f lis ozadt lih 1 3la 9bal lcondition li drt flta7t kaytchiki 
-	//ila kan dakchi li kayjbad kolama n9st mno wa7ed khas ikon kaysawi dakchi li kan 9bal. exmpl: maxlis = 7+1 = 8 <=> 8 - 1 = 7
+	stk->lis_a = malloc(sizeof(int) * stk->maxlis);
+	//printf ("\nmax = %d", stk->maxlis);
+	stk->maxp = stk->lis[stk->pos] + 1; // drna lih haka bach nstoki fih akbar value kayna f lis ozadt lih 1 3la 9bal lcondition li drt flta7t kaytchiki 
+	//ila kan dakchi li kayjbad kolama n9st mno wa7ed khas ikon kaysawi dakchi li kan 9bal. exmpl: maxp = 7+1 = 8 <=> 8 - 1 = 7
+	i = 0;
 	while(++e <= stk->len_a)
 	{
 		if (stk->pos < 0)
 			stk->pos = stk->len_a;
-		if (stk->lis[stk->pos] == stk->maxlis - 1)
+		if (stk->lis[stk->pos] == stk->maxp - 1)
 		{
-			stk->maxlis = stk->lis[stk->pos];
-
-			printf("lis = %d\n", stk->a[stk->pos]);
+			stk->maxp = stk->lis[stk->pos];
+			stk->lis_a[i] = stk->a[stk->pos];
+			printf("\nlis = %d", stk->lis_a[i]);
+			i++;
 		}
 		stk->pos--;
+	}
+
+	int t = 0;
+	i = 0;
+	puts ("\n");
+	while (i <= stk->len_a)
+	{
+		t = 0;
+		while (t <= stk->maxlis)
+		{
+			if (stk->a[0] == stk->lis_a[t])
+			{
+				ft_ra(stk);
+				break ;
+			}	
+			if (t == stk->maxlis)
+				ft_pb(stk);
+			t++;
+		}
+		i++;
 	}
 }
 
@@ -317,20 +339,142 @@ void	ft_find_lis(t_stk *stk)
 	while (++e < stk->len_a)
 	{
 		j = i + 1;
-		while (j != i && j < stk->len_a)
+		while (j != i && j <= stk->len_a)
 		{
 			if (stk->a[i] > stk->a[j] && stk->lis[i] <= stk->lis[j] + 1)
 				stk->lis[i] = stk->lis[j] + 1;
 			j++;
-			if (j == stk->len_a)
+			if (j == stk->len_a + 1) // we add that 1 to rish the end of my array
 				j = 0;
 		}
 		i++;
 		if (i == stk->len_a)
 			i = 0;
 	}
+	i = 0;
+	while (i < stk->len_a)
+	{
+		printf ("%d,", stk->lis[i]);
+		i++;
+	}
 	ft_utils(stk);
 }
+
+
+
+/***********************************************************/
+// this function is to konw the right position 
+// for nb in sb to sa
+
+int ft_right_pos(t_stk *stk, int sb_nb)
+{
+	int i;
+	int old;
+	int ret;
+
+	old = stk->a[stk->len_a - 1];
+	i = 0;
+	ret = 0;
+
+	while (i < stk->len_a)
+	{
+		if (sb_nb > stk->a[i])
+		{
+			if (sb_nb < old)
+				return (i);
+			ret = i;
+		}
+		old = stk->a[i - 1];
+		i++;
+	}
+	return (ret);
+}
+
+
+/***********************************************************/
+// this function let me know what moves to do with my nbrs
+
+void	ft_find_bm(t_stk *stk)
+{
+	int i;
+	int posb;
+	int posa;
+	//int	i;
+	int rslt;
+	int	*best_move;
+	
+	i = 0;
+	posb = -1;
+	rslt = 0;
+
+	while (++posb < stk->len_b)
+	{
+		posa = ft_right_pos(stk, stk->b[posb]);
+		printf ("stk->b[%d] = %d\n",i ,stk->b[posb]);
+
+		//printf ("stk->a[%d] = %d\n", posa,stk->a[posa]);
+		
+		if (stk->b[posb] <= (stk->len_b / 2) && stk->a[posa] <= (stk->len_a / 2))
+		{
+			puts("hadi 1\n");
+			rslt = (stk->len_a - posa) - (stk->len_b - posb);
+			if (rslt >= 0)
+				best_move[i] = rslt + (stk->len_b - posb);
+			if (rslt < 0)
+				best_move[i] = rslt + (stk->len_a - posa);
+		}
+
+		else if (stk->b[posb] >= (stk->len_b / 2) && stk->a[posa] >= (stk->len_a / 2))
+		{
+			puts("hadi 2\n");
+			rslt = (posa) - (posb);
+			if (rslt >= 0)
+				best_move[i] = rslt + (posb);
+			if (rslt < 0)
+				best_move[i] = rslt + (posa);
+		}
+		else if ((stk->a[posa] <= stk->len_a / 2) && (stk->b[posb] >= stk->len_b / 2))
+		{
+			puts("hadi 3\n");
+			best_move[i] = ((stk->len_a - posa) + posb);
+		}
+
+		else if ((stk->a[posa] >= stk->len_a / 2) && (stk->b[posb] <= stk->len_b / 2))
+		{
+			puts("hadi 4\n");
+			best_move[i] = (posb + posa);
+		}
+		i++;
+	}
+
+
+	for (int i = 0; i < stk->len_b; i++)
+	{
+		printf ("best-m[%d], %d\n", stk->b[i], best_move[i]);
+	}
+	puts("hn");
+
+}
+
+
+
+/***********************************************************/
+
+// void ft_algo(t_stk *stk)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	best_move = malloc(sizeof (int) * stk->len_b);
+// 	while ()
+// 	{
+// 		if ()
+// 	}
+
+// }
+
+
+
 
 
 
@@ -339,56 +483,80 @@ int main(int ac,  char *av[])
 {
 	t_stk stk;
 
+	stk.b = (int *)malloc(sizeof(int) * ac);
 	ft_fillsa(av, ac, &stk);
 	ft_find_lis(&stk);
-}
-
-/***********************************************************/
-
-void	ft_algo(t_stk *stk, int ac)
-{
-	int	i;
-	int	j;
+	int i = 0;
+	puts ("\n");
+	while (i < stk.len_a)
+	{
+		printf ("%d\n", stk.a[i]);
+		i++;
+	}
+	puts ("\n");
+	i  =0;
+	while (i < stk.len_b)
+	{
+		printf ("%d\n", stk.b[i]);
+		i++;
+	}
+	ft_find_bm(&stk);
+	puts("hna");
 	
-	i = 0;
-	j = 0;
-	if (ac == 4)
-	{
-		/* if (stk->a[0] > stk->a[1] && stk->a[0] > stk->a[2])
-			ft_ra(stk); */
-		if (stk->a[0] > stk->a[1])
-			ft_sa(stk);
-		if (/* stk->a[0] < stk->a[1] &&  */stk->a[1] < stk->a[2])
-		{
-			//ft_sa(stk);
-			ft_ra(stk);
-		}
-		if (stk->a[0] < stk->a[1] && stk->a[0] > stk->a[2])
-			ft_rra(stk);
-	}
-	else if (ac > 4)
-	{
-	int k = stk->len_a;
-		while (k)
-		{
-			if (stk->a[i] < stk->a[i + 1] && stk->b[j] < stk->b[j + 1] && stk->len_b)
-				ft_ss(stk);
-
-			else if (stk->a[i] < stk->a[i + 1])
-				ft_sa(stk);
-
-			else if (stk->b[j] < stk->b[j + 1])
-				ft_sa(stk);
-
-			else if (stk->b[j] < stk->b[stk->len_b] && stk->b[j] < stk->b[j + 1])
-				ft_rb(stk);
-
-			ft_pb(stk);
-			//stk->len_a--;
-			k--;
-		}
-	}
 }
+
+
+
+
+
+
+
+// push swap or minishell wla zbi hhhhhhhhhhhhhhhhhhhhhhhhh
+/***********************************************************/
+// void	ft_algo(t_stk *stk, int ac)
+// {
+// 	int	i;
+// 	int	j;
+	
+// 	i = 0;
+// 	j = 0;
+// 	if (ac == 4)
+// 	{
+// 		/* if (stk->a[0] > stk->a[1] && stk->a[0] > stk->a[2])
+// 			ft_ra(stk); */
+// 		if (stk->a[0] > stk->a[1])
+// 			ft_sa(stk);
+// 		if (/* stk->a[0] < stk->a[1] &&  */stk->a[1] < stk->a[2])
+// 		{
+// 			//ft_sa(stk);
+// 			ft_ra(stk);
+// 		}
+// 		if (stk->a[0] < stk->a[1] && stk->a[0] > stk->a[2])
+// 			ft_rra(stk);
+// 	}
+// 	else if (ac > 4)
+// 	{
+// 	int k = stk->len_a;
+// 		while (k)
+// 		{
+// 			if (stk->a[i] < stk->a[i + 1] && stk->b[j] < stk->b[j + 1] && stk->len_b)
+// 				ft_ss(stk);
+
+// 			else if (stk->a[i] < stk->a[i + 1])
+// 				ft_sa(stk);
+
+// 			else if (stk->b[j] < stk->b[j + 1])
+// 				ft_sa(stk);
+
+// 			else if (stk->b[j] < stk->b[stk->len_b] && stk->b[j] < stk->b[j + 1])
+// 				ft_rb(stk);
+
+// 			ft_pb(stk);
+// 			//stk->len_a--;
+// 			k--;
+// 		}
+// 	}
+// }
 
 
 
@@ -402,7 +570,6 @@ void	ft_algo(t_stk *stk, int ac)
 // 	int		i = -1;
 // 	// stk->len_b = 0;
 // 	//stk.len_a = 0;
-// 	stk.b = (int *)malloc(sizeof(int) * ac - 1);
 	
 // 	// stk = ft_sa(stk);
 // 	ft_fillsa(av, ac, &stk);
