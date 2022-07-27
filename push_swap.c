@@ -663,7 +663,6 @@ int main(int ac, char *av[])
 }
 
 
-// push swap or minishell wla zbi hhhhhhhhhhhhhhhhhhhhhhhhh
 /***********************************************************/
 // void	ft_algo(t_stk *stk, int ac)
 // {
